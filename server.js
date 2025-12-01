@@ -1,9 +1,17 @@
+
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // 必要なら特定ドメインに制限
+    methods: ["GET", "POST"]
+  }
+});
 
 app.use(express.static(__dirname)); // 静的ファイル配信
 
@@ -16,7 +24,6 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 });
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
